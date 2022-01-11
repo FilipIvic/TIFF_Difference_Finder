@@ -11,16 +11,10 @@ print('OME-TIFF ')
 from apeer_ometiff_library import io
 from matplotlib import pyplot as plt
 import sys
+import glob
+import os
 
-if __name__ == '__main__':
-    
-    program = sys.argv[0]
-    
-    img1_path = sys.argv[1]
-    img2_path = sys.argv[2]
-    img3_path = sys.argv[3]
-    img4_path = sys.argv[4]
-    
+def tiff_difference_finder(img1_path, img2_path, img3_path, img4_path):
     (img1, metadata) = io.read_ometiff(img1_path)
     (img2, metadata) = io.read_ometiff(img2_path)
     
@@ -136,17 +130,35 @@ if __name__ == '__main__':
                 
     if (union_pixels - (intersection1_pixels + intersection2_pixels) == intersection_pixels):
         print("Program uspješno dovršen!")
-        print("Površina segmentiranog tijela slike " + img1_path + " iznosi: " + str(img1_pixels) + " pixela")
-        print("Površina segmentiranog tijela slike " + img2_path + " iznosi: " + str(img2_pixels) + " pixela")
+        print("\n")
+        print("Rezolucija slike je: " + str(resolution) + " pixela")
+        print("Površina segmentiranog tijela slike " + img1_path[2:-5] + " iznosi: " + str(img1_pixels) + " pixela")
+        print("Površina segmentiranog tijela slike " + img2_path[2:-5] + " iznosi: " + str(img2_pixels) + " pixela")
         print("\n")
         print("Unija površina segmeniranih tijela iznosi: " + str(union_pixels) + " pixela")
         print("Presjek površina segmeniranih tijela iznosi: " + str(intersection_pixels) + " pixela")
         print("\n")
-        print("Površina ostatka presjeka Slike1 sa Slikom2 iznosi: " + str(intersection1_pixels) + " pixela")
-        print("Površina ostatka presjeka Slike2 sa Slikom1 iznosi: " + str(intersection2_pixels) + " pixela")
+        print("Površina ostatka presjeka tijela sa slike " + img1_path[2:-5] + " sa tijelom sa slike " + img2_path[2:-5] + " iznosi: " + str(intersection1_pixels) + " pixela")
+        print("Površina ostatka presjeka tijela sa slike " + img2_path[2:-5] + " sa tijelom sa slike " + img1_path[2:-5] + " iznosi: " + str(intersection2_pixels) + " pixela")
         
     else:
         print("Error")
-                            
+        
+
+if __name__ == '__main__':
+    
+    program = sys.argv[0]
+    
+    img1_path = sys.argv[1]
+    img2_path = sys.argv[2]
+    img3_path = sys.argv[3]
+    img4_path = sys.argv[4]
+        
+    names = [os.path.basename(name) for name in glob.glob('/Users/filipivic/Documents/Faks/Programiranje/06_Python_Projects/05_Reading_Pictures/*')]
+    if img1_path[2:] and img2_path[2:] and img3_path[2:] and img4_path[2:] in names:
+        tiff_difference_finder(img1_path, img2_path, img3_path, img4_path)
+        
+    else:
+        print("Krivo unesena imena slika!!!")              
     
     print('\n')
