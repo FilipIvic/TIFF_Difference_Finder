@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jan 10 16:53:43 2022
-runfile('tiff_difference_finder.py', args='./Moja_level_sets_segmentacija.tiff ./Ground_truth_segmentacija_inverted.tiff ./Moja_level_sets_segmentacija_inverted.tiff ./Ground_truth_segmentacija.tiff')
-@author: filipivic
-"""
 
-print('OME-TIFF ')
+runfile('tiff_difference_finder.py', args='./Moja_level_sets_segmentacija.tiff ./Ground_truth_segmentacija_inverted.tiff ./Moja_level_sets_segmentacija_inverted.tiff ./Ground_truth_segmentacija.tiff')
+
+runfile('tiff_difference_finder.py', args='./Moja_level_sets_segmentacija.tiff ./Moja_level_sets_segmentacija.tiff ./Moja_level_sets_segmentacija_inverted.tiff ./Moja_level_sets_segmentacija_inverted.tiff')
+
+@author: filipivic and irenadragicevic
+"""
 
 from apeer_ometiff_library import io
 from matplotlib import pyplot as plt
@@ -87,7 +89,7 @@ def tiff_difference_finder(img1_path, img2_path, img3_path, img4_path):
                         if (pixels < 200):
                             intersection_pixels = intersection_pixels +1
                             
-    ##############################################################################   
+    ###########################-Ispis Grafova-################################   
     
     for arrays1 in img1:
         for arrays2 in arrays1:
@@ -127,7 +129,7 @@ def tiff_difference_finder(img1_path, img2_path, img3_path, img4_path):
                 plt.show()
                 
     print('\n')
-                
+             
     if (union_pixels - (intersection1_pixels + intersection2_pixels) == intersection_pixels):
         print("Program uspješno dovršen!")
         print("\n")
@@ -140,11 +142,13 @@ def tiff_difference_finder(img1_path, img2_path, img3_path, img4_path):
         print("\n")
         print("Površina ostatka presjeka tijela sa slike " + img1_path[2:-5] + " sa tijelom sa slike " + img2_path[2:-5] + " iznosi: " + str(intersection1_pixels) + " pixela")
         print("Površina ostatka presjeka tijela sa slike " + img2_path[2:-5] + " sa tijelom sa slike " + img1_path[2:-5] + " iznosi: " + str(intersection2_pixels) + " pixela")
+        print("\n")
+        print("Postotak poklapanja slika: " + str(intersection_pixels/union_pixels * 100) + "%")
         
     else:
-        print("Error")
-        
-
+        print("ERORR!!!")
+     
+   
 if __name__ == '__main__':
     
     program = sys.argv[0]
@@ -153,7 +157,7 @@ if __name__ == '__main__':
     img2_path = sys.argv[2]
     img3_path = sys.argv[3]
     img4_path = sys.argv[4]
-        
+    
     names = [os.path.basename(name) for name in glob.glob('/Users/filipivic/Documents/Faks/Programiranje/06_Python_Projects/05_Reading_Pictures/*')]
     if img1_path[2:] and img2_path[2:] and img3_path[2:] and img4_path[2:] in names:
         tiff_difference_finder(img1_path, img2_path, img3_path, img4_path)
