@@ -133,7 +133,7 @@ if __name__ == '__main__':
     img1_path = sys.argv[1]
     img2_path = sys.argv[2]
     
-    names = [os.path.basename(name) for name in glob.glob('/Users/filipivic/Documents/Faks/Programiranje/06_Python_Projects/05_Reading_Pictures/*')]
+    names = [os.path.basename(name) for name in glob.glob("*")]
     if img1_path and img2_path in names:
         tiff_difference_finder(img1_path, img2_path)
         
