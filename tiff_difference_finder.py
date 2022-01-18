@@ -10,11 +10,15 @@ runfile('tiff_difference_finder.py', args='Moja_level_sets_segmentacija.tiff Moj
 @author: filipivic and irenadragicevic
 """
 
-from apeer_ometiff_library import io
-from matplotlib import pyplot as plt
 import sys
 import glob
 import os
+import cv2
+import numpy as np
+from apeer_ometiff_library import io
+from matplotlib import pyplot as plt
+from scipy.spatial.distance import directed_hausdorff
+
 
 #def tiff_difference_finder(img1_path, img2_path, img3_path, img4_path):
 def tiff_difference_finder(img1_path, img2_path):
@@ -36,11 +40,30 @@ def tiff_difference_finder(img1_path, img2_path):
     for arrays1 in img1:
         for arrays2 in arrays1:
             for arrays3 in arrays2:
+                edges1 = cv2.Canny(arrays3, 100,255)
+    
+    for arrays1 in img2:
+        for arrays2 in arrays1:
+            for arrays3 in arrays2:
+                edges2 = cv2.Canny(arrays3, 100,255)
+                
+    indices1 = np.where(edges1 != [0])
+    indices2 = np.where(edges2 != [0])
+
+    coordiates1 = list(zip(indices1[1], indices1[0]))
+    coordiates2 = list(zip(indices2[1], indices2[0]))
+    
+    u = np.array(coordiates1)
+    v = np.array(coordiates2)
+             
+    for arrays1 in img1:
+        for arrays2 in arrays1:
+            for arrays3 in arrays2:
                 for arrays4 in arrays3:
                     for pixels in arrays4:
                         if (pixels > 200):
                             img1_pixels = img1_pixels +1
-    
+                             
     for arrays1 in img2:
         for arrays2 in arrays1:
             for arrays3 in arrays2:
@@ -124,6 +147,8 @@ def tiff_difference_finder(img1_path, img2_path):
     print("\n")
     
     print("Postotak poklapanja slika: " + str((union_pixels - (intersection1_pixels + intersection2_pixels))/union_pixels * 100) + "%")
+    print("Hausdorff min: " + str(directed_hausdorff(u, v)[0]) + " pixela")
+    print("Hausdorff max: " + str(max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])) + " pixela")
         
    
 if __name__ == '__main__':
